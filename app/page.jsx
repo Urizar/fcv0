@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
+import { EraserIcon, LoaderCircleIcon, Pause, PauseIcon, PlayIcon } from 'lucide-react'
 
 /**
  * Componente React que estima π con Monte Carlo y dibuja los puntos con D3
@@ -172,6 +173,7 @@ export default function MonteCarloD3() {
           <input
             type='number'
             min='1'
+            max='99999'
             step='1'
             value={nTarget}
             onChange={e => setNTarget(Number(e.target.value))}
@@ -182,24 +184,24 @@ export default function MonteCarloD3() {
         <button
           onClick={() => { reset(); setRunning(true) }}
           disabled={running || nTarget < 1}
-          className='rounded bg-black px-4 py-2 text-white disabled:opacity-50'
+          className='rounded bg-green-300 px-4 py-2 text-green-500 disabled:opacity-50'
         >
-          {running ? 'Corriendo…' : 'Iniciar'}
+          {running ? <LoaderCircleIcon className='animate-spin' strokeWidth={2.5}/> : <PlayIcon strokeWidth={2.5}/>}
         </button>
 
         <button
           onClick={() => setRunning(false)}
           disabled={!running}
-          className='rounded border px-4 py-2'
+          className='rounded bg-amber-500 text-amber-300 px-4 py-2 disabled:opacity-50'
         >
-          Pausar
+          <PauseIcon strokeWidth={2.5} />
         </button>
 
         <button
           onClick={reset}
-          className='rounded border px-4 py-2'
+          className='rounded bg-red-300 text-red-500 px-4 py-2'
         >
-          Limpiar
+          <EraserIcon strokeWidth={2.5} />
         </button>
       </div>
 
