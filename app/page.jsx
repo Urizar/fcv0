@@ -23,6 +23,8 @@ export default function MonteCarloD3() {
   const xScale = d3.scaleLinear().domain([-1, 1]).range([cx - r, cx + r])
   const yScale = d3.scaleLinear().domain([-1, 1]).range([cy + r, cy - r])
 
+  const rand = d3.randomUniform(-1, 1)
+
   useEffect(() => {
     const svg = d3.select(svgRef.current)
       .attr('viewBox', `0 0 ${width} ${height}`)
@@ -75,8 +77,8 @@ export default function MonteCarloD3() {
       const pts = []
 
       for (let i = 0; i < add; i++) {
-        const x = Math.random() * 2 - 1
-        const y = Math.random() * 2 - 1
+        const x = rand()
+        const y = rand()
         const isInside = x * x + y * y <= 1
         if (isInside) inCircle++
         pts.push({ x, y, inside: isInside })
@@ -107,7 +109,7 @@ export default function MonteCarloD3() {
 
     frameId = requestAnimationFrame(step)
     return () => cancelAnimationFrame(frameId)
-  }, [running, n, inside, nTarget])
+  }, [running, n, inside, nTarget, rand])
 
   const reset = () => {
     setN(0)
