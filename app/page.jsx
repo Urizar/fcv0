@@ -1,13 +1,45 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import * as d3 from 'd3'
 
-export default function MonteCarlo() {
+export default function MonteCarloD3() {
+  const svgRef = useRef(null)
+
   const [nTarget, setNTarget] = useState(1000)
   const [n, setN] = useState(0)
   const [inside, setInside] = useState(0)
   const [pi, setPi] = useState(null)
   const [running, setRunning] = useState(false)
+
+  const width = 600
+  const height = 600
+  const margin = 40
+  const plotSize = Math.min(width, height) - margin * 2
+  const cx = width / 2
+  const cy = height / 2
+  const r = plotSize / 2
+
+  useEffect(() => {
+    const svg = d3.select(svgRef.current)
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('width', '100%')
+      .attr('height', '100%')
+
+    svg.selectAll('*').remove()
+
+    svg.append('rect')
+      .attr('x', cx - r).attr('y', cy - r)
+      .attr('width', plotSize).attr('height', plotSize)
+      .attr('fill', '#fff')
+      .attr('stroke', '#999')
+
+    svg.append('circle')
+      .attr('cx', cx).attr('cy', cy).attr('r', r)
+      .attr('fill', 'none').attr('stroke', '#bbb').attr('stroke-width', 4)
+
+    svg.append('g').attr('id', 'points')
+  }, [])
 
   useEffect(() => {
     if (!running) return
@@ -56,7 +88,7 @@ export default function MonteCarlo() {
 
   return (
     <div className='mx-auto max-w-4xl p-6 space-y-4'>
-      <h1 className='text-2xl font-bold'>Monte Carlo π</h1>
+      <h1 className='text-2xl font-bold'>Monte Carlo π con D3.js</h1>
 
       <div className='flex flex-wrap items-end gap-3'>
         <label className='block'>
@@ -103,6 +135,11 @@ export default function MonteCarlo() {
           {pi && <span className='text-gray-500'>(error abs: {(Math.abs(Math.PI - pi)).toExponential(2)})</span>}
         </div>
       </div>
+
+      <svg
+        ref={svgRef}
+        style={{ width: '100%', maxWidth: 500, aspectRatio: '1 / 1', borderRadius: 8, boxShadow: '0 0 0 1px #e5e7eb' }}
+      />
     </div>
   )
 }
