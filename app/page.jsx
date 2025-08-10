@@ -56,6 +56,10 @@ export default function MonteCarloD3() {
 
   useEffect(() => {
     if (!running) return
+
+    const svg = d3.select(svgRef.current)
+    const pointsG = svg.select('#points')
+
     let frameId
     const batch = 250
 
@@ -68,12 +72,25 @@ export default function MonteCarloD3() {
 
       let inCircle = 0
       const add = Math.min(batch, remaining)
+      const pts = []
 
       for (let i = 0; i < add; i++) {
         const x = Math.random() * 2 - 1
         const y = Math.random() * 2 - 1
-        if (x * x + y * y <= 1) inCircle++
+        const isInside = x * x + y * y <= 1
+        if (isInside) inCircle++
+        pts.push({ x, y, inside: isInside })
       }
+
+      pointsG.selectAll(null)
+        .data(pts)
+        .enter()
+        .append('circle')
+        .attr('cx', d => xScale(d.x))
+        .attr('cy', d => yScale(d.y))
+        .attr('r', 3.2)
+        .attr('fill', d => d.inside ? '#7678ed' : '#f7b801')
+        .attr('opacity', 0.85)
 
       const newN = n + add
       const newInside = inside + inCircle
@@ -97,6 +114,7 @@ export default function MonteCarloD3() {
     setInside(0)
     setPi(null)
     setRunning(false)
+    d3.select(svgRef.current).select('#points').selectAll('*').remove()
   }
 
   return (
