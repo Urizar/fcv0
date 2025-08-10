@@ -20,6 +20,9 @@ export default function MonteCarloD3() {
   const cy = height / 2
   const r = plotSize / 2
 
+  const xScale = d3.scaleLinear().domain([-1, 1]).range([cx - r, cx + r])
+  const yScale = d3.scaleLinear().domain([-1, 1]).range([cy + r, cy - r])
+
   useEffect(() => {
     const svg = d3.select(svgRef.current)
       .attr('viewBox', `0 0 ${width} ${height}`)
@@ -33,6 +36,16 @@ export default function MonteCarloD3() {
       .attr('width', plotSize).attr('height', plotSize)
       .attr('fill', '#fff')
       .attr('stroke', '#999')
+
+    svg.append('line')
+      .attr('x1', xScale(-1)).attr('y1', yScale(0))
+      .attr('x2', xScale(1)).attr('y2', yScale(0))
+      .attr('stroke', '#777').attr('stroke-dasharray', '4,4')
+
+    svg.append('line')
+      .attr('x1', xScale(0)).attr('y1', yScale(-1))
+      .attr('x2', xScale(0)).attr('y2', yScale(1))
+      .attr('stroke', '#777').attr('stroke-dasharray', '4,4')
 
     svg.append('circle')
       .attr('cx', cx).attr('cy', cy).attr('r', r)
