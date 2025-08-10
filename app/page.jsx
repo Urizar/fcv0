@@ -44,8 +44,8 @@ export default function MonteCarloD3() {
    */
   const yScale = d3.scaleLinear().domain([-1, 1]).range([cy + r, cy - r])
 
-  /** Generador uniforme en [-1,1] usando D3 */
-  const rand = d3.randomUniform(-1, 1)
+  /** Generador uniforme en [-1,1] usando Math.random */
+  const rand = () => Math.random() * 2 - 1
 
   /**
    * Inicializa el lienzo y elementos estáticos al montar
