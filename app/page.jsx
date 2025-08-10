@@ -3,15 +3,27 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
+/**
+ * Componente React que estima π con Monte Carlo y dibuja los puntos con D3
+ * Idea: la probabilidad de caer dentro del círculo unidad en el cuadrado [-1,1]^2 es π/4
+ * Por tanto, π ≈ 4 * (dentro / total)
+ */
 export default function MonteCarloD3() {
+  /** Referencia al SVG para dibujar con D3 */
   const svgRef = useRef(null)
 
+  /** Muestras objetivo totales por generar */
   const [nTarget, setNTarget] = useState(1000)
+  /** Muestras ya generadas */
   const [n, setN] = useState(0)
+  /** Conteo de puntos que cayeron dentro del círculo */
   const [inside, setInside] = useState(0)
+  /** Estimación numérica de π */
   const [pi, setPi] = useState(null)
+  /** Bandera que indica si la simulación está corriendo */
   const [running, setRunning] = useState(false)
 
+  // Configuración de lienzo
   const width = 600
   const height = 600
   const margin = 40
@@ -20,11 +32,24 @@ export default function MonteCarloD3() {
   const cy = height / 2
   const r = plotSize / 2
 
+  /**
+   * Escala lineal X: [-1, 1] a pixeles
+   * @type {d3.ScaleLinear<number, number>}
+   */
   const xScale = d3.scaleLinear().domain([-1, 1]).range([cx - r, cx + r])
+
+  /**
+   * Escala lineal Y invertida para SVG
+   * @type {d3.ScaleLinear<number, number>}
+   */
   const yScale = d3.scaleLinear().domain([-1, 1]).range([cy + r, cy - r])
 
+  /** Generador uniforme en [-1,1] usando D3 */
   const rand = d3.randomUniform(-1, 1)
 
+  /**
+   * Inicializa el lienzo y elementos estáticos al montar
+   */
   useEffect(() => {
     const svg = d3.select(svgRef.current)
       .attr('viewBox', `0 0 ${width} ${height}`)
@@ -33,29 +58,41 @@ export default function MonteCarloD3() {
 
     svg.selectAll('*').remove()
 
+    // Fondo: cuadrado circunscrito
     svg.append('rect')
       .attr('x', cx - r).attr('y', cy - r)
       .attr('width', plotSize).attr('height', plotSize)
       .attr('fill', '#fff')
       .attr('stroke', '#999')
 
+    // Eje X
     svg.append('line')
       .attr('x1', xScale(-1)).attr('y1', yScale(0))
       .attr('x2', xScale(1)).attr('y2', yScale(0))
-      .attr('stroke', '#777').attr('stroke-dasharray', '4,4')
+      .attr('stroke', '#777')
+      .attr('stroke-dasharray', '4,4')
 
+    // Eje Y
     svg.append('line')
       .attr('x1', xScale(0)).attr('y1', yScale(-1))
       .attr('x2', xScale(0)).attr('y2', yScale(1))
-      .attr('stroke', '#777').attr('stroke-dasharray', '4,4')
+      .attr('stroke', '#777')
+      .attr('stroke-dasharray', '4,4')
 
+    // Círculo unidad
     svg.append('circle')
       .attr('cx', cx).attr('cy', cy).attr('r', r)
-      .attr('fill', 'none').attr('stroke', '#bbb').attr('stroke-width', 4)
+      .attr('fill', 'none')
+      .attr('stroke', '#bbb')
+      .attr('stroke-width', 4)
 
+    // Capa para puntos
     svg.append('g').attr('id', 'points')
   }, [])
 
+  /**
+   * Bucle animado: genera puntos en lotes, dibuja y actualiza π
+   */
   useEffect(() => {
     if (!running) return
 
@@ -65,6 +102,9 @@ export default function MonteCarloD3() {
     let frameId
     const batch = 250
 
+    /**
+     * Genera un frame de la simulación
+     */
     const step = () => {
       const remaining = nTarget - n
       if (remaining <= 0) {
@@ -111,6 +151,9 @@ export default function MonteCarloD3() {
     return () => cancelAnimationFrame(frameId)
   }, [running, n, inside, nTarget, rand])
 
+  /**
+   * Reinicia contadores y limpia los puntos del gráfico
+   */
   const reset = () => {
     setN(0)
     setInside(0)
