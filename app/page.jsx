@@ -15,8 +15,14 @@ export default function MonteCarlo() {
     const batch = 250
 
     const step = () => {
+      const remaining = nTarget - n
+      if (remaining <= 0) {
+        setRunning(false)
+        return
+      }
+
       let inCircle = 0
-      let add = Math.min(batch, nTarget - n)
+      const add = Math.min(batch, remaining)
 
       for (let i = 0; i < add; i++) {
         const x = Math.random() * 2 - 1
@@ -32,7 +38,6 @@ export default function MonteCarlo() {
 
       if (newN >= nTarget) {
         setRunning(false)
-        cancelAnimationFrame(frameId)
         return
       }
       frameId = requestAnimationFrame(step)
@@ -82,7 +87,10 @@ export default function MonteCarlo() {
           Pausar
         </button>
 
-        <button onClick={reset} className='rounded border px-4 py-2'>
+        <button
+          onClick={reset}
+          className='rounded border px-4 py-2'
+        >
           Limpiar
         </button>
       </div>
@@ -90,7 +98,8 @@ export default function MonteCarlo() {
       <div className='text-sm text-gray-700'>
         <div><strong>Samples:</strong> {n} / {nTarget}</div>
         <div><strong>Dentro del círculo:</strong> {inside}</div>
-        <div><strong>π ≈</strong> {pi ? pi.toFixed(6) : '—'} &nbsp;
+        <div>
+          <strong>π ≈</strong> {pi ? pi.toFixed(6) : '—'}&nbsp;
           {pi && <span className='text-gray-500'>(error abs: {(Math.abs(Math.PI - pi)).toExponential(2)})</span>}
         </div>
       </div>
