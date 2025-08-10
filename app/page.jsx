@@ -164,7 +164,7 @@ export default function MonteCarloD3() {
 
   return (
     <div className='mx-auto max-w-4xl p-6 space-y-4'>
-      <h1 className='text-2xl font-bold'>Monte Carlo π con D3.js</h1>
+      <h1 className='text-2xl font-bold'>Monte Carlo π</h1>
 
       <div className='flex flex-wrap items-end gap-3'>
         <label className='block'>
