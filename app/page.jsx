@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
-import { EraserIcon, LoaderCircleIcon, Pause, PauseIcon, PlayIcon } from 'lucide-react'
+import { Code2Icon, EraserIcon, LoaderCircleIcon, Pause, PauseIcon, PlayIcon } from 'lucide-react'
 
 /**
  * Componente React que estima π con Monte Carlo y dibuja los puntos con D3
@@ -203,6 +203,8 @@ export default function MonteCarloD3() {
         >
           <EraserIcon strokeWidth={2.5} />
         </button>
+
+        <button className='rounded bg-blue-300 text-blue-500 px-4 py-2'> <a href="https://github.com/Urizar/fcv0" rel="noopener noreferrer" aria-label="github" title="github"> <Code2Icon /> </a> </button>
       </div>
 
       <div className='text-sm text-gray-700'>
