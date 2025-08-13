@@ -14,7 +14,7 @@ export default function MonteCarloD3() {
   const svgRef = useRef(null)
 
   /** Muestras objetivo totales por generar */
-  const [nTarget, setNTarget] = useState(1000)
+  const [nTarget, setNTarget] = useState(100)
   /** Muestras ya generadas */
   const [n, setN] = useState(0)
   /** Conteo de puntos que cayeron dentro del círculo */
@@ -165,11 +165,11 @@ export default function MonteCarloD3() {
 
   return (
     <div className='mx-auto max-w-4xl p-6 space-y-4'>
-      <h1 className='text-2xl font-bold'>Monte Carlo π</h1>
-
+      <h1 className='text-2xl font-bold'>Monte Carlo estimación de π</h1>
+      <p className='text-md font-bold'>Por Luis Urizar Masis</p>
       <div className='flex flex-wrap items-end gap-3'>
         <label className='block'>
-          <span className='text-sm font-medium'>Muestras objetivo</span>
+          <span className='text-sm font-medium mx-2'>Muestras objetivo</span>
           <input
             type='number'
             min='1'
